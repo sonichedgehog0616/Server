@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('battle/purchase_piece', 'BattleController@purchase_piece');
+
