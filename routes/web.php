@@ -16,4 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('battle/purchase_piece', 'BattleController@purchase_piece');
+Route::post('battle/purchase_piece', 'BattleController@purchase_piece');	
 
