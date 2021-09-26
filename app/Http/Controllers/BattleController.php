@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
  * バトルコントローラー
@@ -10,7 +11,105 @@ use Illuminate\Http\Request;
 class BattleController extends Controller
 {
     /*
-     * コマを購入する 
+     * ユーザー情報の登録(一旦間借りする)
+     *      
+     */
+    public function sign_in(Request $request)
+    {
+        $name      = $request->input('name');
+        $timestamp = date("Y-m-d H:i:s", time());
+
+        // DB::beginTransaction();
+
+        
+
+        // try
+        // {
+        
+            DB::table('user')->insert(
+                array(
+                    'name'       => $name,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                )
+            );
+
+            // DB::commit();
+
+        // }
+        // catch (ExclusiveLockException $e)
+        // {
+            // DB::rollback();
+            // throw $e;
+        // }
+        
+        // return 
+        $response = response(
+            array(
+                'success'  => true,
+                'timestamp'  => $timestamp,
+            )
+        ); 
+        
+        return $response;
+    }
+
+    /*
+     * ユーザー情報の初期化
+     *      
+     */
+    public function init_user_param(Request $request)
+    {
+        $user_id = $request->input('user_id');
+
+        // validation
+        // userが他のアリーナに参加中でないこと
+        
+        // insert into database
+        // アリーナ参加登録
+         
+        // return 
+        $response = response(
+            array(
+                'user_id'  => $user_id,
+                'arena_id' => 1,
+            )
+        );
+
+        return $response;
+    }
+
+    /*
+     * 準備フェーズ：コマの抽選
+     *      
+     */
+    public function draw_piece(Request $request)
+    {
+        $user_id = $request->input('user_id');
+
+        // validation
+         
+        // insert into database
+        
+        // 
+        // draw piece
+        $list_piece = array(
+            '2', '3', '4'
+        );
+
+        // return 
+        $response = response(
+            array(
+                'user_id'    => $user_id,
+                'list_piece' => $list_piece,
+            )
+        );
+
+        return $response;
+    }
+
+    /*
+     * 準備フェーズ：コマを購入する 
      *      
      */
     public function purchase_piece(Request $request)
@@ -22,7 +121,6 @@ class BattleController extends Controller
         // validation
          
         // insert into database
-        
 
         $success = true;
 
