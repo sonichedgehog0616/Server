@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 /*
  * バトルコントローラー
@@ -16,38 +17,43 @@ class BattleController extends Controller
      */
     public function sign_in(Request $request)
     {
-        $name      = $request->input('name');
+        // $name      = $request->input('name');
+        $name      = 'mokoti';
         $timestamp = date("Y-m-d H:i:s", time());
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
+        try
+        {
         
-
-        // try
-        // {
-        
-            DB::table('user')->insert(
+            $result = DB::table('user')->insertGetId(
                 array(
+                    // 'id' => 8,
                     'name'       => $name,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 )
             );
 
-            // DB::commit();
+            if (!$result)
+            {
+                throw new Exception(sprintf("userデータのinsertに失敗しました user_id:%s", $user_id));
+            }
 
-        // }
-        // catch (ExclusiveLockException $e)
-        // {
-            // DB::rollback();
-            // throw $e;
-        // }
+            DB::commit();
+        }
+        catch (Exception $e)
+        {
+            DB::rollback();
+            throw $e;
+        }
         
         // return 
         $response = response(
             array(
-                'success'  => true,
-                'timestamp'  => $timestamp,
+                'success'   => true,
+                'timestamp' => $timestamp,
+                'result'    => $result, 
             )
         ); 
         
@@ -91,7 +97,6 @@ class BattleController extends Controller
          
         // insert into database
         
-        // 
         // draw piece
         $list_piece = array(
             '2', '3', '4'
